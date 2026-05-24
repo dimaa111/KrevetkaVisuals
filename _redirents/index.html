@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>KrevetkaVisuals — Премиум визуальный мод</title>
+    <meta name="description" content="KrevetkaVisuals — стильный визуальный мод для Minecraft. Покупайте подписки и получайте доступ к премиум функциям.">
+    <link rel="icon" type="image/png" href="icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #0a0a0f;
+            font-family: 'Inter', sans-serif;
+            color: #fff;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        .bg-aura {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 40%, rgba(255, 59, 111, 0.2), rgba(0, 0, 0, 0.96) 80%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 2;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: rgba(8, 8, 14, 0.85);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 59, 111, 0.3);
+            padding: 2rem 1rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 2rem;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: none;
+        }
+
+        .logo-text {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff6a9e, #ff2d5a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 0.85rem 1.2rem;
+            border-radius: 16px;
+            color: #b8b8d0;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            font-weight: 500;
+        }
+
+        .nav a i { width: 24px; font-size: 1.2rem; }
+
+        .nav a:hover {
+            background: rgba(255, 59, 111, 0.15);
+            color: #ff6a8e;
+            transform: translateX(5px);
+        }
+
+        .nav a.active {
+            background: linear-gradient(95deg, rgba(255, 59, 111, 0.2), rgba(255, 59, 111, 0.05));
+            border-left: 3px solid #ff3b6f;
+            color: #ff6a9e;
+        }
+
+        .main {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            max-width: calc(100% - 280px);
+        }
+
+        .hero {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero-content { flex: 1; }
+        .hero h1 { font-size: 3rem; font-weight: 800; line-height: 1.2; margin-bottom: 1.5rem; }
+        .gradient-text { background: linear-gradient(135deg, #ff6a9e, #ff2d5a); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .hero p { font-size: 1.1rem; color: #aaa; max-width: 500px; margin-bottom: 2rem; }
+
+        .hero-stats { display: flex; gap: 2rem; margin-top: 2rem; }
+        .stat { text-align: center; }
+        .stat-number { font-size: 2rem; font-weight: 800; color: #ff5a8a; }
+        .stat-label { font-size: 0.8rem; color: #888; }
+
+        .video-placeholder {
+            flex: 1;
+            background: linear-gradient(135deg, #1a1a2a, #0f0f18);
+            border-radius: 28px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 59, 111, 0.3);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .video-placeholder:hover { border-color: #ff3b6f; transform: scale(1.02); }
+        .video-placeholder i { font-size: 4rem; color: #ff3b6f; margin-bottom: 1rem; }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card {
+            background: rgba(15, 15, 24, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 1.8rem;
+            border: 1px solid rgba(255, 59, 111, 0.2);
+            transition: 0.3s;
+        }
+        .feature-card:hover { border-color: rgba(255, 59, 111, 0.5); transform: translateY(-5px); }
+        .feature-card i { font-size: 2.5rem; color: #ff5a8a; margin-bottom: 1rem; }
+        .feature-card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+        .feature-card p { color: #999; font-size: 0.9rem; }
+
+        .section-title { font-size: 2rem; text-align: center; margin: 2rem 0; }
+
+        .price-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .price-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 24px;
+            padding: 1.8rem;
+            text-align: center;
+            border: 1px solid rgba(255, 59, 111, 0.2);
+            transition: 0.25s;
+        }
+        .price-card:hover { transform: translateY(-5px); border-color: #ff3b6f; }
+        .price { font-size: 2.2rem; font-weight: 800; color: #ff6a9e; margin: 1rem 0; }
+
+        .btn {
+            background: linear-gradient(95deg, #ff2d5a, #ff5a8a);
+            border: none;
+            padding: 0.7rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .btn-outline { background: transparent; border: 1px solid #ff3b6f; color: #ff6a9e; }
+        .btn-outline:hover { background: rgba(255, 59, 111, 0.2); }
+        .btn:hover { transform: scale(1.03); box-shadow: 0 5px 15px rgba(255, 59, 111, 0.4); }
+
+        .card {
+            background: rgba(15, 15, 24, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 1.8rem;
+            border: 1px solid rgba(255, 59, 111, 0.25);
+            transition: 0.3s;
+            margin-bottom: 1.5rem;
+        }
+
+        .hwid-box { font-family: monospace; background: #00000066; padding: 0.8rem; border-radius: 14px; word-break: break-all; }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1e1e2c;
+            border-left: 4px solid #ff3b6f;
+            padding: 12px 20px;
+            border-radius: 16px;
+            z-index: 1100;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(60px); } to { opacity: 1; transform: translateX(0); } }
+
+        @media (max-width: 800px) {
+            .sidebar { width: 80px; padding: 1rem 0.2rem; }
+            .logo-img { width: 40px; height: 40px; margin: 0 auto; }
+            .logo-text { display: none; }
+            .nav a span { display: none; }
+            .nav a i { margin: 0 auto; font-size: 1.4rem; }
+            .main { max-width: calc(100% - 80px); padding: 1rem; }
+            .hero h1 { font-size: 2rem; }
+        }
+
+        .funpay-badge { background: #1f1f2e; border-radius: 40px; padding: 0.3rem 1rem; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 6px; }
+
+        /* Стили для 404 страницы */
+        .notfound-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+            text-align: center;
+        }
+        .notfound-code { font-size: 8rem; font-weight: 800; color: #ff3b6f; text-shadow: 0 0 30px rgba(255,59,111,0.3); }
+        .notfound-title { font-size: 2rem; margin: 1rem 0; }
+        .notfound-text { color: #aaa; margin-bottom: 2rem; }
+    </style>
+</head>
+<body>
+<div class="bg-aura"></div>
+<div class="app">
+    <aside class="sidebar">
+        <a href="#" data-page="dashboard" class="logo">
+            <img src="icon.png" alt="Logo" class="logo-img" onerror="this.src='https://placehold.co/40x40/ff3b6f/white?text=KV'">
+            <span class="logo-text">KrevetkaVisuals</span>
+        </a>
+        <div class="nav">
+            <a href="#" data-page="dashboard"><i class="fas fa-tachometer-alt"></i><span>Обзор</span></a>
+            <a href="#" data-page="profile"><i class="fas fa-user"></i><span>Аккаунт</span></a>
+            <a href="#" data-page="store"><i class="fas fa-store"></i><span>Магазин</span></a>
+            <a href="#" data-page="download"><i class="fas fa-download"></i><span>Скачать клиент</span></a>
+            <a href="#" data-page="hwid"><i class="fas fa-microchip"></i><span>HWID / Сброс</span></a>
+            <a href="#" data-page="support"><i class="fas fa-headset"></i><span>Поддержка</span></a>
+        </div>
+    </aside>
+    <main class="main" id="mainContent">Загрузка...</main>
+</div>
+
+<script>
+    (function() {
+        // Восстановление пути из параметра ?p= для GitHub Pages (чтобы работали прямые ссылки /dashboard/user)
+        var urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('p')) {
+            var newPath = urlParams.get('p');
+            var newSearch = urlParams.has('q') ? '?' + urlParams.get('q').replace(/~and~/g, '&') : '';
+            var newUrl = newPath + newSearch + window.location.hash;
+            history.replaceState(null, '', newUrl);
+        }
+    })();
+
+    const FUNPAY_URL = "https://funpay.com/users/18382216/";
+    const HWID_RESET_PRICE = 39;
+    
+    let user = JSON.parse(localStorage.getItem('kv_user')) || {
+        id: Date.now(),
+        name: "Игрок",
+        email: "",
+        hwid: null,
+        subscription: null
+    };
+    
+    function saveUser() { localStorage.setItem('kv_user', JSON.stringify(user)); }
+    function showToast(msg) { let t = document.createElement('div'); t.className = 'toast'; t.innerText = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 3000); }
+    
+    function purchaseViaFunpay(itemName, price) {
+        showToast(`🛒 Перенаправление на FunPay для оплаты: ${itemName} (${price}₽)`);
+        setTimeout(() => { window.open(FUNPAY_URL, '_blank'); }, 600);
+    }
+    
+    function resetHWID() {
+        if(!user.hwid) { showToast('HWID не привязан'); return; }
+        showToast(`🔧 Сброс HWID за ${HWID_RESET_PRICE}₽ — переход на FunPay`);
+        setTimeout(() => window.open(FUNPAY_URL, '_blank'), 500);
+    }
+    
+    let currentPage = 'dashboard';
+    
+    function renderPage(page, is404 = false) {
+        const container = document.getElementById('mainContent');
+        
+        if (is404) {
+            container.innerHTML = `
+                <div class="notfound-container">
+                    <div class="notfound-code">404</div>
+                    <div class="notfound-title"><i class="fas fa-compass"></i> Страница не найдена</div>
+                    <div class="notfound-text">Извините, такой страницы не существует. Возможно, она была перемещена или удалена.</div>
+                    <button class="btn" id="backToHome">🏠 Вернуться на главную</button>
+                </div>
+            `;
+            document.getElementById('backToHome')?.addEventListener('click', () => renderPage('dashboard'));
+            setActiveLink(null);
+            return;
+        }
+        
+        if(page === 'profile') {
+            container.innerHTML = `
+                <div class="card">
+                    <h2><i class="fas fa-user-circle"></i> Аккаунт</h2>
+                    <label>Ваше имя</label>
+                    <input id="userName" value="${user.name.replace(/</g, '&lt;').replace(/>/g, '&gt;')}" placeholder="Как к вам обращаться">
+                    <label>Email (для связи)</label>
+                    <input id="userEmail" value="${user.email || ''}" placeholder="your@email.com">
+                    <button class="btn" id="saveProfileBtn">💾 Сохранить</button>
+                </div>
+            `;
+            document.getElementById('saveProfileBtn')?.addEventListener('click', () => {
+                user.name = document.getElementById('userName').value;
+                user.email = document.getElementById('userEmail').value;
+                saveUser();
+                showToast('Профиль сохранён');
+            });
+        }
+        else if(page === 'dashboard') {
+            let subStatus = user.subscription ? new Date(user.subscription) > new Date() ? `Активна до ${new Date(user.subscription).toLocaleDateString()}` : 'Истекла' : 'Нет подписки';
+            container.innerHTML = `
+                <div class="hero">
+                    <div class="hero-content">
+                        <h1>Лучший визуальный мод для <span class="gradient-text">комфортной игры</span> в Minecraft</h1>
+                        <p>KrevetkaVisuals создан для тех, кто ценит стиль, удобство и максимальную производительность.</p>
+                        <div class="btn-group" style="display:flex; gap:1rem; flex-wrap:wrap;">
+                            <button class="btn" id="heroStoreBtn">Выбрать тариф</button>
+                            <button class="btn btn-outline" id="heroDownloadBtn" ${!user.subscription ? 'disabled' : ''}>Скачать клиент</button>
+                        </div>
+                        <div class="hero-stats">
+                            <div class="stat"><div class="stat-number">2,500+</div><div class="stat-label">Активных пользователей</div></div>
+                            <div class="stat"><div class="stat-number">50+</div><div class="stat-label">Обновлений</div></div>
+                            <div class="stat"><div class="stat-number">98%</div><div class="stat-label">Довольных клиентов</div></div>
+                        </div>
+                    </div>
+                    <div class="video-placeholder" id="videoTrigger">
+                        <i class="fas fa-play-circle"></i>
+                        <p>Узнайте больше о KrevetkaVisuals</p>
+                        <p style="font-size:0.7rem; color:#666;">Краткий видеообзор</p>
+                    </div>
+                </div>
+                <h2 class="section-title">Преимущества нашего мода</h2>
+                <div class="features-grid">
+                    <div class="feature-card"><i class="fas fa-palette"></i><h3>Дизайн</h3><p>Наслаждайтесь игрой с элегантным минималистичным интерфейсом.</p></div>
+                    <div class="feature-card"><i class="fas fa-tachometer-alt"></i><h3>Производительность</h3><p>Оптимизированный код позволяет достичь высокого FPS даже на слабых ПК.</p></div>
+                    <div class="feature-card"><i class="fas fa-crosshairs"></i><h3>PvP преимущества</h3><p>Получите преимущество в бою с помощью специальных настроек.</p></div>
+                    <div class="feature-card"><i class="fas fa-sliders-h"></i><h3>Гибкие настройки</h3><p>Настройте мод под себя с помощью множества параметров.</p></div>
+                    <div class="feature-card"><i class="fas fa-shield-alt"></i><h3>Анти-чит</h3><p>Полная совместимость с популярными анти-чит системами.</p></div>
+                    <div class="feature-card"><i class="fas fa-sync-alt"></i><h3>Регулярные обновления</h3><p>Мы постоянно улучшаем и обновляем наш мод.</p></div>
+                </div>
+                <h2 class="section-title">Ваш идеальный тариф здесь</h2>
+                <div class="price-grid">
+                    <div class="price-card"><h3>⭐ 30 дней</h3><div class="price">49 ₽</div><p>30-дневный доступ к полному функционалу</p><button class="btn buy-funpay" data-name="30 дней" data-price="49">Выбрать</button></div>
+                    <div class="price-card"><h3>🔥 90 дней</h3><div class="price">99 ₽</div><p>90 дней + эксклюзивный бейдж в Discord</p><button class="btn buy-funpay" data-name="90 дней" data-price="99">Выбрать</button></div>
+                    <div class="price-card"><h3>👑 Навсегда</h3><div class="price">299 ₽</div><p>Пожизненный доступ + приоритетная поддержка</p><button class="btn buy-funpay" data-name="Навсегда" data-price="299">Выбрать</button></div>
+                </div>
+                <div class="card">
+                    <h3>💻 Ваш статус</h3>
+                    <p>Подписка: ${subStatus}</p>
+                    <p>HWID: ${user.hwid || '❌ Не привязан'}</p>
+                    <button class="btn-outline btn" id="resetHwidBtn" style="margin-top:1rem;">Сбросить HWID (${HWID_RESET_PRICE}₽)</button>
+                </div>
+            `;
+            document.querySelectorAll('.buy-funpay').forEach(btn => {
+                btn.addEventListener('click', () => { let name = btn.dataset.name, price = btn.dataset.price; purchaseViaFunpay(name, price); });
+            });
+            document.getElementById('heroStoreBtn')?.addEventListener('click', () => renderPage('store'));
+            document.getElementById('heroDownloadBtn')?.addEventListener('click', () => { if(user.subscription) renderPage('download'); else showToast('Сначала купите подписку'); });
+            document.getElementById('resetHwidBtn')?.addEventListener('click', resetHWID);
+            document.getElementById('videoTrigger')?.addEventListener('click', () => showToast('🎥 Видеообзор: https://youtu.be/demo'));
+        }
+        else if(page === 'store') {
+            container.innerHTML = `<div class="card"><h2>🛒 Магазин KrevetkaVisuals</h2><p>Оплата через FunPay — моментальная выдача доступа.</p><div class="price-grid">
+                <div class="price-card"><h3>⭐ 30 дней</h3><div class="price">49 ₽</div><button class="btn buy-funpay" data-name="30 дней" data-price="49">Купить</button></div>
+                <div class="price-card"><h3>🔥 90 дней</h3><div class="price">99 ₽</div><button class="btn buy-funpay" data-name="90 дней" data-price="99">Купить</button></div>
+                <div class="price-card"><h3>👑 Навсегда</h3><div class="price">299 ₽</div><button class="btn buy-funpay" data-name="Навсегда" data-price="299">Купить</button></div>
+            </div></div>`;
+            document.querySelectorAll('.buy-funpay').forEach(btn => {
+                btn.addEventListener('click', () => { let name = btn.dataset.name, price = btn.dataset.price; purchaseViaFunpay(name, price); });
+            });
+        }
+        else if(page === 'download') {
+            let hasAccess = user.subscription && new Date(user.subscription) > new Date();
+            container.innerHTML = `<div class="card"><h2>📥 Скачать KrevetkaVisuals</h2><p>${hasAccess ? '✅ Ваша подписка активна' : '⚠️ Доступ только для активных подписчиков. <a href="#" id="buyLinkStore" style="color:#ff3b6f;">Купить подписку</a>'}</p><button class="btn" id="downloadBtn" ${!hasAccess ? 'disabled' : ''}>Скачать лаунчер (Windows)</button></div>`;
+            document.getElementById('downloadBtn')?.addEventListener('click', () => showToast('🔗 Ссылка: https://krevetkavisuals.ru/download/latest'));
+            document.getElementById('buyLinkStore')?.addEventListener('click', (e) => { e.preventDefault(); renderPage('store'); });
+        }
+        else if(page === 'hwid') {
+            container.innerHTML = `<div class="card"><h2>🔒 HWID</h2><p>Ваш HWID: ${user.hwid || '❌ Не привязан'}</p><p>Сброс HWID — ${HWID_RESET_PRICE}₽</p><button class="btn" id="resetHwidMainBtn">Сбросить HWID</button><hr><h3>Как привязать HWID</h3><p>1. Купите подписку<br>2. Скачайте лаунчер<br>3. Запустите — HWID привяжется автоматически</p></div>`;
+            document.getElementById('resetHwidMainBtn')?.addEventListener('click', resetHWID);
+        }
+        else if(page === 'support') {
+            container.innerHTML = `<div class="card"><h2>🆘 Поддержка</h2><p>По всем вопросам: пишите в Telegram <strong>@krevetka_support</strong> или на почту <strong>support@krevetkavisuals.ru</strong></p>
+                <div style="background:#1a1a2a; border-radius:20px; padding:1rem; margin-top:1rem;">
+                    <p><i class="fab fa-telegram"></i> Telegram: <a href="https://t.me/krevetka_support" style="color:#ff6a9e;">@krevetka_support</a></p>
+                    <p><i class="fas fa-envelope"></i> Email: support@krevetkavisuals.ru</p>
+                </div>
+            </div>`;
+        }
+        else {
+            renderPage('dashboard', false);
+            return;
+        }
+        
+        setActiveLink(page);
+        currentPage = page;
+        history.pushState({ page }, '', `/dashboard/${page === 'dashboard' ? '' : page}`);
+    }
+    
+    function setActiveLink(page) {
+        document.querySelectorAll('.nav a').forEach(link => {
+            if(page && link.getAttribute('data-page') === page) link.classList.add('active');
+            else link.classList.remove('active');
+        });
+    }
+    
+    document.querySelectorAll('.nav a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            renderPage(link.getAttribute('data-page'));
+        });
+    });
+    
+    window.addEventListener('popstate', (event) => {
+        let path = window.location.pathname;
+        let page = path.split('/dashboard/')[1] || 'dashboard';
+        const validPages = ['dashboard', 'profile', 'store', 'download', 'hwid', 'support'];
+        if(!validPages.includes(page)) renderPage('dashboard', false);
+        else renderPage(page, false);
+    });
+    
+    let initialPath = window.location.pathname;
+    let initialPage = initialPath.split('/dashboard/')[1] || 'dashboard';
+    const validPages = ['dashboard', 'profile', 'store', 'download', 'hwid', 'support'];
+    if(!validPages.includes(initialPage)) renderPage('dashboard', false);
+    else renderPage(initialPage, false);
+</script>
+</body>
+</html>
